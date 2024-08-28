@@ -1,43 +1,53 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import AdminNavbar from '../layout/navbar';
- 
+import ClientNavbar from '../layout/navbarClient';
+import { Table } from 'react-bootstrap'; // Assurez-vous d'importer Bootstrap
 
+const Historique = () => {
+  const location = useLocation();
+  const { clientId, isClient } = location.state || {}; // Récupération des données passées
 
-const Historique = ({ location }) => {
-  const { clientId } = location.state || {};
+  // Déterminez la navbar à afficher en fonction de la source
+  const isAdmin = !isClient; // Si ce n'est pas un client, alors c'est un admin
 
-  // Simuler les données de l'historique
+  // Exemple de données historiques
   const historiqueData = [
-    { date: '2024-01-01', abonnement: 'Premium', volume: '50 m³', prix: '500 MAD' },
-    { date: '2024-02-01', abonnement: 'Premium', volume: '50 m³', prix: '500 MAD' },
-    // Ajoutez d'autres entrées d'historique ici
+    { date: '2024-01-15', type: 'Abonnement', volume: '50 m³', prix: '500 MAD' },
+    { date: '2024-02-20', type: 'Modification', volume: '30 m³', prix: '300 MAD' },
+    { date: '2024-03-10', type: 'Abonnement', volume: '40 m³', prix: '400 MAD' },
+    { date: '2024-04-05', type: 'Annulation', volume: '20 m³', prix: '200 MAD' }
   ];
 
   return (
     <div>
-      <AdminNavbar userEmail="admin@example.com" />
-      <div className="container mt-4">
-        <h2>Historique des Abonnements - Client ID: {clientId}</h2>
-        <table className="table table-dark table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type d'Abonnement</th>
-              <th>Volume (m³)</th>
-              <th>Prix (MAD)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {historiqueData.map((historique, index) => (
-              <tr key={index}>
-                <td>{historique.date}</td>
-                <td>{historique.abonnement}</td>
-                <td>{historique.volume}</td>
-                <td>{historique.prix}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail="client@example.com" />}
+      <div className="container mt-5">
+        <h2>Historique des Abonnements</h2>
+        <div className="card shadow-lg p-3 mb-5 bg-white rounded">
+          <div className="card-body">
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Volume (m³)</th>
+                  <th>Prix (MAD)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {historiqueData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.date}</td>
+                    <td>{item.type}</td>
+                    <td>{item.volume}</td>
+                    <td>{item.prix}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </div>
       </div>
     </div>
   );

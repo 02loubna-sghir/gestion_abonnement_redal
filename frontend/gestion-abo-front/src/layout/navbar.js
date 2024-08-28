@@ -11,7 +11,7 @@ const Navbar = ({ userEmail }) => {
         <a className="navbar-brand" href="/">
         <img
              src={logo}
-             width="90"
+             width="80"
             height="40"
             className="d-inline-block align-text-top"
           />

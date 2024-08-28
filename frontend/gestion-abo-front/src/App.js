@@ -8,6 +8,8 @@ import SignUpPage from './pages/SIGNUP';
 import AdminHome from './pages/admin/accueil';
 import ClientManagement from './pages/admin/gestionClients';
 import Historique from './pages/historique';
+import AccueilC from './pages/client/accueilC';
+import InfosClient from './pages/client/infosC';
 function App() {
   return (
     <Router>
@@ -17,7 +19,9 @@ function App() {
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/admin/accueil" element={<AdminHome />} />
             <Route path="/admin/gestionC" element={<ClientManagement  />} />
-            <Route path="/historique" component={<Historique />} />
+            <Route path="/historique" element={<Historique />} />
+            <Route path="/accueilC" element={<AccueilC />} />
+            <Route path="/infos-client" element={<InfosClient/>} />
             </Routes>
         </div>
       </Router>

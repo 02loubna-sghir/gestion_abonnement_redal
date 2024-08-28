@@ -1,0 +1,45 @@
+/* navbarC.css */
+
+.custom-navbar {
+  background-color: #e8eaec;
+  border-bottom: 2px solid #FF0000; /* Ajoute une bordure rouge en bas */
+}
+
+.logo {
+  filter: brightness(0) invert(1); /* Optionnel : rend le logo blanc pour mieux contraster */
+}
+
+.custom-navbar .navbar-nav .nav-link {
+  color: #0a0a0a6f !important; /* Couleur des liens en rouge */
+  font-weight: bold; /* Gras pour les liens */
+}
+
+.custom-navbar .navbar-nav .nav-link:hover {
+  color: #0f0e0b !important; /* Couleur dorée au survol */
+}
+
+.email-display {
+  color: #FFF; /* Couleur du texte de l'email */
+  font-weight: 500; /* Poids de police modéré pour l'email */
+}
+
+.custom-navbar .navbar-toggler {
+  border-color: #FF0000; /* Couleur de la bordure du bouton hamburger */
+}
+
+.custom-navbar .navbar-toggler-icon {
+  background-image: url('data:image/svg+xml,...'); /* Personnalisez l'icône du bouton hamburger si vous le souhaitez */
+}
+
+.navbar-dropdown-menu {
+  background-color: #343a40; /* Couleur de fond du menu déroulant */
+}
+
+.navbar-dropdown-menu .dropdown-item {
+  color: #343a40; /* Couleur des éléments du menu déroulant */
+}
+
+.navbar-dropdown-menu .dropdown-item:hover {
+  background-color: #FF0000; /* Couleur de survol des éléments du menu déroulant */
+  color: #FFF; /* Couleur du texte au survol */
+}
