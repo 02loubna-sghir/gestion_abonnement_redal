@@ -1,0 +1,33 @@
+/* Profile.css */
+.container {
+    margin-top: 20px;
+  }
+  
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .card-body {
+    background-color: #f8f9fa;
+  }
+  
+  img.img-fluid {
+    max-width: 80px;
+  }
+  
+  .btn-primary {
+    background-color: #ff00d0;
+    border: none;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+  }
+  

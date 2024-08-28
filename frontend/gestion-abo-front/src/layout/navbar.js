@@ -1,22 +1,24 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faCog } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import logo from '/Users/loubnasghir/Documents/GitHub/gestion_abonnement_redal/frontend/gestion-abo-front/src/assets/téléchargement.png'; // Ajustez le chemin en fonction de la structure de votre projet
 
 const Navbar = ({ userEmail }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-        <img
-             src={logo}
-             width="80"
+        <Link className="navbar-brand" to="/admin/accueil">
+          <img
+            src={logo}
+            width="80"
             height="40"
             className="d-inline-block align-text-top"
+            alt="Logo"
           />
-          
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -31,39 +33,37 @@ const Navbar = ({ userEmail }) => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="/">
+              <Link className="nav-link active" aria-current="page" to="/admin/accueil">
                 Accueil
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="/">
+              <Link className="nav-link active" aria-current="page" to="/admin/gestionC">
                 Clients
-              </a>
+              </Link>
             </li>
           </ul>
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <span className="nav-link">
                 <FontAwesomeIcon icon={faUser} className="me-2" />
                 {userEmail}
-              </a>
+              </span>
             </li>
             <li className="nav-item dropdown">
-              <a
+              <button
                 className="nav-link dropdown-toggle"
-                href="#"
+                type="button"
                 id="navbarDropdown"
-                role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 <FontAwesomeIcon icon={faCog} />
-              </a>
+              </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a className="dropdown-item" href="/profile">Profile</a></li>
-                <li><a className="dropdown-item" href="/settings">Settings</a></li>
+                <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="/logout">Logout</a></li>
+                <li><Link className="dropdown-item" to="/">Logout</Link></li>
               </ul>
             </li>
           </ul>
