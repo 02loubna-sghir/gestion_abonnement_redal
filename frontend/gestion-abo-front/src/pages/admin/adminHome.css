@@ -1,0 +1,42 @@
+/* src/pages/admin/adminHome.css */
+
+.jumbotron {
+  background: linear-gradient(135deg, #007bff, #00d2ff);
+  color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.card-info {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  text-align: center;
+}
+
+.card-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-light {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-light:hover {
+  background-color: #007bff;
+  color: white;
+}

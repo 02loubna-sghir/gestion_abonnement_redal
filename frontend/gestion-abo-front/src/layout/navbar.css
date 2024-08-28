@@ -19,7 +19,7 @@
 }
 
 .email-display {
-  color: #FFF; /* Couleur du texte de l'email */
+  color: #ffffff; /* Couleur du texte de l'email */
   font-weight: 500; /* Poids de police modéré pour l'email */
 }
 
@@ -41,5 +41,5 @@
 
 .navbar-dropdown-menu .dropdown-item:hover {
   background-color: #FF0000; /* Couleur de survol des éléments du menu déroulant */
-  color: #FFF; /* Couleur du texte au survol */
+  color: #f7f2f2; /* Couleur du texte au survol */
 }

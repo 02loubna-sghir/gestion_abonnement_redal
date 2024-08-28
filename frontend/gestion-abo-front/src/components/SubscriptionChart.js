@@ -5,12 +5,12 @@ import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
-const SubscriptionChart = ({ data }) => {
+const SubscriptionChart = ({ data, type }) => {
   const chartData = {
     labels: data.labels,
     datasets: [
       {
-        label: 'Abonnements',
+        label: type === 'daily' ? 'Consommation Quotidienne' : 'Consommation Mensuelle',
         data: data.values,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -21,7 +21,7 @@ const SubscriptionChart = ({ data }) => {
 
   return (
     <div>
-      <h2>Tendances des Abonnements</h2>
+      <h2>{type === 'daily' ? 'Consommation Quotidienne' : 'Consommation Mensuelle'}</h2>
       <Line data={chartData} />
     </div>
   );
