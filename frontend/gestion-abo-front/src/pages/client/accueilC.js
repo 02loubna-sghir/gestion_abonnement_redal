@@ -52,24 +52,32 @@ function AccueilC() {
         </section>
 
         {/* Guide utilisateur */}
-        <section className="mb-5">
-          <div 
-            style={{ 
-              height: 'auto', 
-              backgroundColor: '#f8f9fa', 
-              borderRadius: '10px', 
-              border: '1px solid #ddd',
-              overflow: 'hidden' 
-            }}>
-            <img 
-              src={guideUser} 
-              alt="Guide utilisateur"
-              className="img-fluid"
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </div>
-          <h2 className="h4 mt-3" style={{ color: '#4A90E2' }}>Quelles sont les caractéristiques techniques du tuyau ?</h2>
-        </section>
+<section className="mb-5">
+  <div 
+    style={{ 
+      height: 'auto', 
+      backgroundColor: '#f8f9fa', 
+      borderRadius: '10px', 
+      border: '10px solid #ddd',
+      overflow: 'hidden', 
+      textAlign: 'center',  // Center the image within the container
+      padding: '10px'       // Add some padding to avoid the image touching the border
+    }}>
+    <img 
+      src={guideUser} 
+      alt="Guide utilisateur"
+      className="img-fluid"
+      style={{ 
+        maxWidth: '300%',   // Ensure the image fills the container width
+        height: 'auto',     // Maintain aspect ratio
+        maxHeight: '400px'  // Set a maximum height for better control
+      }} 
+    />
+  </div>
+  <h2 className="h4 mt-3" style={{ color: '#4A90E2' }}>Quelles sont les caractéristiques techniques du tuyau ?</h2>
+</section>
+
+
 
         {/* Vidéo YouTube */}
         <section className="mb-5">

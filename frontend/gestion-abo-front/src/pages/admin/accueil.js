@@ -1,5 +1,6 @@
 // src/pages/admin/AdminHome.js
 import React from 'react';
+import { Link } from 'react-router-dom'; // Importez Link pour la navigation interne
 import AdminNavbar from '../../layout/navbar';
 import SubscriptionChart from '../../components/SubscriptionChart'; // Assurez-vous d'importer ce composant
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,6 +12,13 @@ const AdminHome = () => {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     values: [30, 40, 35, 50, 60, 70, 80, 90, 100, 110, 120, 130]
   };
+
+  // Exemple de données pour les demandes non traitées
+  const pendingRequests = [
+    { id: 1, title: 'Demande de mise à jour du profil', date: '01/08/2024' },
+    { id: 2, title: 'Demande de modification du plan d’abonnement', date: '02/08/2024' },
+    // Ajoutez d'autres demandes ici
+  ];
 
   return (
     <div>
@@ -35,9 +43,7 @@ const AdminHome = () => {
                 <p className="card-text">1,234</p>
                 <p className="card-text text-muted">Nombre total d'abonnements actuels.</p>
               </div>
-              <div className="card-footer text-end">
-                <a href="/admin/subscriptions" className="btn btn-light">Voir plus</a>
-              </div>
+              {/* Bouton supprimé */}
             </div>
           </div>
           <div className="col-md-4">
@@ -47,20 +53,18 @@ const AdminHome = () => {
                 <p className="card-text">5678 m³</p>
                 <p className="card-text text-muted">Consommation totale d'eau jusqu'à présent.</p>
               </div>
-              <div className="card-footer text-end">
-                <a href="/admin/consumption" className="btn btn-light">Voir plus</a>
-              </div>
+              {/* Bouton supprimé */}
             </div>
           </div>
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
-                <h5 className="card-title">Alertes</h5>
+                <h5 className="card-title">Demandes Reçues</h5>
                 <p className="card-text">2</p>
-                <p className="card-text text-muted">Nombre d'alertes importantes.</p>
+                <p className="card-text text-muted">Nombre de demandes Reçues.</p>
               </div>
               <div className="card-footer text-end">
-                <a href="/admin/alerts" className="btn btn-light">Voir plus</a>
+                <Link to="/gestion-demandes" className="btn btn-light">Voir plus</Link>
               </div>
             </div>
           </div>
@@ -80,26 +84,22 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Section d'alertes récentes */}
+        {/* Section des demandes non traitées */}
         <div className="row mt-4">
           <div className="col-md-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Alertes Récentes</h4>
+                <h4 className="card-title">Demandes Non Traitée</h4>
               </div>
               <div className="card-body">
                 <ul className="list-group">
-                  <li className="list-group-item">
-                    <h6 className="mb-1">Alerte 1</h6>
-                    <p className="mb-1">Détails de l'alerte 1.</p>
-                    <small className="text-muted">Date : 01/01/2024</small>
-                  </li>
-                  <li className="list-group-item">
-                    <h6 className="mb-1">Alerte 2</h6>
-                    <p className="mb-1">Détails de l'alerte 2.</p>
-                    <small className="text-muted">Date : 02/01/2024</small>
-                  </li>
-                  {/* Ajoutez plus d'alertes ici */}
+                  {pendingRequests.map(request => (
+                    <li key={request.id} className="list-group-item">
+                      <h6 className="mb-1">{request.title}</h6>
+                      <p className="mb-1">Date : {request.date}</p>
+                      <Link to={`/gestion-demandes`} className="btn btn-sm btn-primary">Voir les détails</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
