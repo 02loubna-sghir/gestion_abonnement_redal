@@ -14,6 +14,13 @@ public class Abonnement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_abonnement;
     private LocalDate date_debut;
-    private LocalDate date_fin;
+    private Integer volume;
+    private  Double solde ;
+
+    @ManyToOne
+    @JoinColumn(name = "id_client")
+    private Client client;
+
+
 
 }

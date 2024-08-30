@@ -1,8 +1,12 @@
 package gestion_abo.controllers;
 
+import gestion_abo.entities.Admin;
 import gestion_abo.entities.Client;
+import gestion_abo.services.AdminService;
 import gestion_abo.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -11,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clients")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 public class ClientController {
 
     private final ClientService clientService;
@@ -28,11 +33,6 @@ public class ClientController {
     @GetMapping("/email")
     public Optional<Client> getClientByEmail(@RequestParam String email) {
         return clientService.findClientByEmail(email);
-    }
-
-    @PostMapping
-    public Client createClient(@RequestBody Client client) {
-        return clientService.saveClient(client);
     }
 
     @PutMapping("/{id}")
@@ -54,4 +54,25 @@ public class ClientController {
     public List<Client> getAllClients() {
         return clientService.findAllClients();
     }
+    // ClientController.java
+    @GetMapping("/login")
+    public ResponseEntity<Client> loginClient(@RequestParam String email, @RequestParam String password) {
+        Optional<Client> client = clientService.findClientByEmail(email);
+        if (client.isPresent() && client.get().getPassword().equals(password)) {
+            return ResponseEntity.ok(client.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+    @Autowired
+    private AdminService adminService; // Vous aurez besoin du service Admin pour récupérer l'admin avec id=1
+
+    @PostMapping
+    public Client createClient(@RequestBody Client client) {
+        Admin admin = adminService.findAdminById(1)
+                .orElseThrow(() -> new ResourceAccessException("Admin with id 1 not found"));
+        client.setAdmin(admin); // Définir l'admin associé avec id 1
+        return clientService.saveClient(client);
+    }
+
 }

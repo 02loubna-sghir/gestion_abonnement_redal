@@ -17,5 +17,10 @@ public class Client {
     private String prenom;
     private String email;
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Admin admin;
+
+
 
 }
