@@ -11,7 +11,7 @@ const Historique = () => {
   // Déterminez la navbar à afficher en fonction de la source
   const isAdmin = !isClient; // Si ce n'est pas un client, alors c'est un admin
 
-  // Exemple de données historiques
+  // Exemple de données historiques (vous pouvez conserver la clé 'type' si elle est utilisée ailleurs)
   const historiqueData = [
     { date: '2024-01-15', type: 'Abonnement', volume: '50 m³', prix: '500 MAD' },
     { date: '2024-02-20', type: 'Modification', volume: '30 m³', prix: '300 MAD' },
@@ -30,7 +30,6 @@ const Historique = () => {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Type</th>
                   <th>Volume (m³)</th>
                   <th>Prix (MAD)</th>
                 </tr>
@@ -39,7 +38,6 @@ const Historique = () => {
                 {historiqueData.map((item, index) => (
                   <tr key={index}>
                     <td>{item.date}</td>
-                    <td>{item.type}</td>
                     <td>{item.volume}</td>
                     <td>{item.prix}</td>
                   </tr>
