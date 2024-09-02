@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import AdminNavbar from '../layout/navbar';
 import ClientNavbar from '../layout/navbarClient';
-import { Table } from 'react-bootstrap'; // Assurez-vous d'importer Bootstrap
+import { Table } from 'react-bootstrap';
 
 const Historique = () => {
   const location = useLocation();
-  const { clientId, isClient } = location.state || {}; // Récupération des données passées
+  const { clientId, isClient } = location.state || {};
+  const [historiqueData, setHistoriqueData] = useState([]);
 
-  // Déterminez la navbar à afficher en fonction de la source
-  const isAdmin = !isClient; // Si ce n'est pas un client, alors c'est un admin
+  useEffect(() => {
+    const fetchHistorique = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/abonnements/client/${clientId}`);
+        setHistoriqueData(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'historique:', error);
+      }
+    };
 
-  // Exemple de données historiques (vous pouvez conserver la clé 'type' si elle est utilisée ailleurs)
-  const historiqueData = [
-    { date: '2024-01-15', type: 'Abonnement', volume: '50 m³', prix: '500 MAD' },
-    { date: '2024-02-20', type: 'Modification', volume: '30 m³', prix: '300 MAD' },
-    { date: '2024-03-10', type: 'Abonnement', volume: '40 m³', prix: '400 MAD' },
-    { date: '2024-04-05', type: 'Annulation', volume: '20 m³', prix: '200 MAD' }
-  ];
+    fetchHistorique();
+  }, [clientId]);
+
+  const isAdmin = !isClient;
 
   return (
     <div>
@@ -29,17 +35,25 @@ const Historique = () => {
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Volume (m³)</th>
-                  <th>Prix (MAD)</th>
+                  <th>ID Abonnement</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Date Début</th>
+                  <th>Solde</th>
+                  <th>Volume</th>
+                  <th>ID Client</th>
                 </tr>
               </thead>
               <tbody>
                 {historiqueData.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.date}</td>
+                    <td>{item.id_abonnement}</td>
+                    <td>{item.client.nom}</td>
+                    <td>{item.client.prenom}</td>
+                    <td>{item.date_debut}</td>
+                    <td>{item.solde}</td>
                     <td>{item.volume}</td>
-                    <td>{item.prix}</td>
+                    <td>{item.client.id_client}</td>
                   </tr>
                 ))}
               </tbody>

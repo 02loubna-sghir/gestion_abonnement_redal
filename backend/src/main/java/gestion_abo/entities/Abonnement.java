@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "Abonnement")
 public class Abonnement {
@@ -15,12 +17,9 @@ public class Abonnement {
     private Integer id_abonnement;
     private LocalDate date_debut;
     private Integer volume;
-    private  Double solde ;
+    private Double solde;
 
     @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
-
-
-
 }

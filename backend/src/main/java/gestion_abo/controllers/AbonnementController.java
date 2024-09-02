@@ -1,7 +1,6 @@
 package gestion_abo.controllers;
 
 import gestion_abo.entities.Abonnement;
-import gestion_abo.repositories.AbonnementRepository;
 import gestion_abo.services.AbonnementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ import java.util.Optional;
 public class AbonnementController {
 
     private final AbonnementService abonnementService;
-    private AbonnementRepository abonnementRepository;
 
     @Autowired
     public AbonnementController(AbonnementService abonnementService) {
@@ -35,7 +33,8 @@ public class AbonnementController {
 
     @PutMapping("/{id}")
     public Abonnement updateAbonnement(@PathVariable Integer id, @RequestBody Abonnement abonnement) {
-        if (abonnementRepository.existsById(id)) {
+        Optional<Abonnement> existingAbonnement = abonnementService.findAbonnementById(id);
+        if (existingAbonnement.isPresent()) {
             abonnement.setId_abonnement(id);
             return abonnementService.saveAbonnement(abonnement);
         } else {
@@ -48,8 +47,8 @@ public class AbonnementController {
         abonnementService.deleteAbonnementById(id);
     }
 
-    @GetMapping
-    public List<Abonnement> getAllAbonnements() {
-        return abonnementService.findAllAbonnements();
+    @GetMapping("/client/{idClient}")
+    public List<Abonnement> getAbonnementsByClientId(@PathVariable Integer idClient) {
+        return abonnementService.findAbonnementsByClientId(idClient);
     }
 }

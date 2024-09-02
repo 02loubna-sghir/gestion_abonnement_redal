@@ -37,4 +37,9 @@ public class AbonnementService {
     public List<Abonnement> findAllAbonnements() {
         return abonnementRepository.findAll();
     }
+
+    // Retrieve abonnements by client ID
+    public List<Abonnement> findAbonnementsByClientId(Integer idClient) {
+        return abonnementRepository.findByClientIdClient(idClient);
+    }
 }
