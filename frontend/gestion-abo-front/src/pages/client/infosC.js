@@ -12,8 +12,6 @@ const InfosClient = ({ isAdmin }) => {
     nom: 'Doe',
     prenom: 'John',
     email: 'john.doe@example.com',
-    abonnementActuel: '50 m³',
-    prixActuel: '500 MAD',
   };
 
   const handleViewHistory = () => {
@@ -52,16 +50,6 @@ const InfosClient = ({ isAdmin }) => {
                 </div>
                 
                 <hr />
-                <div className="row">
-                  <div className="col-md-6">
-                    <h5 className="text-muted">Abonnement Actuel:</h5>
-                    <p className="font-weight-bold">{clientInfo.abonnementActuel}</p>
-                  </div>
-                  <div className="col-md-6">
-                    <h5 className="text-muted">Prix Actuel:</h5>
-                    <p className="font-weight-bold">{clientInfo.prixActuel}</p>
-                  </div>
-                </div>
                 <div className="d-flex justify-content-center">
                   <button 
                     className="btn btn-primary mt-3 px-5" 
