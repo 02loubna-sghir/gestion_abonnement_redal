@@ -1,13 +1,30 @@
-// src/pages/admin/AdminHome.js
-import React from 'react';
-import { Link } from 'react-router-dom'; // Importez Link pour la navigation interne
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Importer axios
+import { Link } from 'react-router-dom';
 import AdminNavbar from '../../layout/navbar';
-import SubscriptionChart from '../../components/SubscriptionChart'; // Assurez-vous d'importer ce composant
+import SubscriptionChart from '../../components/SubscriptionChart';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './adminHome.css'; // Assurez-vous que ce fichier CSS est correctement configuré
+import './adminHome.css';
 
 const AdminHome = () => {
-  // Exemple de données pour le graphique, vous pouvez les remplacer par vos propres données
+  const [totalAbonnements, setTotalAbonnements] = useState(0); // État pour stocker le nombre total d'abonnements
+
+  // Utiliser useEffect pour effectuer la requête GET lors du montage du composant
+  useEffect(() => {
+    const fetchTotalAbonnements = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/abonnements') ; // Remplacez par votre URL API
+        console.log('Response data:', response.data); // Ajouter un log pour vérifier les données
+        setTotalAbonnements(response.data.length); // Mettre à jour le nombre total d'abonnements
+      } catch (error) {
+        console.error('Erreur lors de la récupération des abonnements:', error);
+      }
+    };
+
+    fetchTotalAbonnements();
+  }, []); // Le tableau vide [] signifie que l'effet se déclenche uniquement au montage
+
+  // Exemple de données pour le graphique
   const chartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     values: [30, 40, 35, 50, 60, 70, 80, 90, 100, 110, 120, 130]
@@ -16,8 +33,7 @@ const AdminHome = () => {
   // Exemple de données pour les demandes non traitées
   const pendingRequests = [
     { id: 1, title: 'Demande de mise à jour du profil', date: '01/08/2024' },
-    { id: 2, title: 'Demande de modification du plan d’abonnement', date: '02/08/2024' },
-    // Ajoutez d'autres demandes ici
+    { id: 2, title: 'Demande de modification du plan d’abonnement', date: '02/08/2024' }
   ];
 
   return (
@@ -40,12 +56,12 @@ const AdminHome = () => {
             <div className="card card-info">
               <div className="card-body">
                 <h5 className="card-title">Total Abonnements</h5>
-                <p className="card-text">1,234</p>
+                <p className="card-text">{totalAbonnements}</p> {/* Affichage du nombre total d'abonnements */}
                 <p className="card-text text-muted">Nombre total d'abonnements actuels.</p>
               </div>
-              {/* Bouton supprimé */}
             </div>
           </div>
+          {/* Autres cartes */}
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
@@ -53,7 +69,6 @@ const AdminHome = () => {
                 <p className="card-text">5678 m³</p>
                 <p className="card-text text-muted">Consommation totale d'eau jusqu'à présent.</p>
               </div>
-              {/* Bouton supprimé */}
             </div>
           </div>
           <div className="col-md-4">

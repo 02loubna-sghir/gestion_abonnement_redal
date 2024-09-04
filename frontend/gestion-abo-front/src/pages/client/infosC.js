@@ -4,15 +4,21 @@ import AdminNavbar from '../../layout/navbar';
 import ClientNavbar from '../../layout/navbarClient';
 
 const InfosClient = ({ isAdmin }) => {
+  // Récupère les informations de l'utilisateur depuis le localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
+  const clientId = user?.id_client; // Assurez-vous que l'ID est stocké sous 'id_client'
+
+  console.log('Client ID:', clientId); // Affiche l'ID du client dans la console
+
   const navigate = useNavigate();
 
-  // Simuler les informations du client
+  // Simuler les informations du client en utilisant l'ID récupéré
   const clientInfo = {
-    id: 1, // Ajoutez un ID pour identifier le client
-    nom: 'Doe',
-    prenom: 'John',
-    email: 'john.doe@example.com',
-  };
+    id: clientId,
+    nom: user?.nom,  
+    prenom: user?.prenom,
+    email: user?.email || 'john.doe@example.com',
+    };
 
   const handleViewHistory = () => {
     navigate('/historique', { state: { clientId: clientInfo.id, isClient: !isAdmin } });
@@ -20,7 +26,7 @@ const InfosClient = ({ isAdmin }) => {
 
   return (
     <div>
-      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail="client@example.com" />}
+      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail={clientInfo.email} />}
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-md-8">

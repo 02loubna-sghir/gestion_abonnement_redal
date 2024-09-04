@@ -1,26 +1,37 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importation pour la navigation
-import AdminNavbar from '../../layout/navbar'; // Importation correcte
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import AdminNavbar from '../../layout/navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './profile.css'; // Assurez-vous que ce fichier CSS est correctement configuré et dans le même répertoire
-import profileImage from '../../assets/IMG_7370.jpg'; // Importation de l'image
+import './profile.css';
+import profileImage from '../../assets/IMG_7370.jpg';
 
 const Profile = () => {
-  const navigate = useNavigate(); // Hook pour la navigation
+  const [adminData, setAdminData] = useState({ nom: '', prenom: '', email: '' });
+  const navigate = useNavigate();
 
-  // Fonction pour naviguer vers la page d'édition du profil
+  useEffect(() => {
+    // Fetch admin data by ID or email (modify the URL accordingly)
+    axios.get('http://localhost:8080/admins/1')  // Replace '1' with the actual admin ID or use the /email endpoint
+      .then(response => {
+        setAdminData(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the admin data!', error);
+      });
+  }, []);
+
   const handleEditProfile = () => {
-    navigate('/admin/edit-profile'); // Chemin vers la page d'édition du profil
+    navigate('/admin/edit-profile');
   };
 
-  // Fonction pour naviguer vers la page de changement de mot de passe
   const handleChangePassword = () => {
-    navigate('/admin/change-password'); // Chemin vers la page de changement de mot de passe
+    navigate('/admin/change-password');
   };
 
   return (
     <div>
-      <AdminNavbar userEmail="admin@example.com" />
+      <AdminNavbar userEmail={adminData.email} />
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-4">
@@ -30,11 +41,11 @@ const Profile = () => {
               </div>
               <div className="card-body text-center">
                 <img
-                  src={profileImage} // Utilisation de l'importation pour l'image
+                  src={profileImage}
                   alt="Profile"
                   className="rounded-circle img-fluid"
                 />
-                <h5 className="my-3">Sghir Loubna</h5>
+                <h5 className="my-3">{adminData.nom} {adminData.prenom}</h5>
                 <p className="text-muted">Administrator</p>
               </div>
             </div>
@@ -47,11 +58,11 @@ const Profile = () => {
               <div className="card-body">
                 <div className="row mb-3">
                   <div className="col-sm-3"><strong>Email:</strong></div>
-                  <div className="col-sm-9">admin@REDAL.com</div>
+                  <div className="col-sm-9">{adminData.email}</div>
                 </div>
                 <div className="row mb-3">
                   <div className="col-sm-3"><strong>Phone:</strong></div>
-                  <div className="col-sm-9">+123 456 7890</div>
+                  <div className="col-sm-9">+212 7 55 66 88 99</div>
                 </div>
                 <div className="row mb-3">
                   <div className="col-sm-3"><strong>Role:</strong></div>
@@ -61,13 +72,13 @@ const Profile = () => {
                   <div className="col-sm-12">
                     <button
                       className="btn btn-primary"
-                      onClick={handleEditProfile} // Ajout du gestionnaire d'événements
+                      onClick={handleEditProfile}
                     >
                       Edit Profile
                     </button>
                     <button
                       className="btn btn-secondary ms-2"
-                      onClick={handleChangePassword} // Ajout du gestionnaire d'événements
+                      onClick={handleChangePassword}
                     >
                       Change Password
                     </button>

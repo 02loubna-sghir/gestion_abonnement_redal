@@ -74,4 +74,29 @@ public class AdminController {
         }
     }
 
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<?> changePassword(@PathVariable Integer id, @RequestBody Map<String, String> passwordData) {
+        Optional<Admin> adminOptional = adminService.findAdminById(id);
+
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+
+            String currentPassword = passwordData.get("currentPassword");
+            String newPassword = passwordData.get("newPassword");
+
+            // Check if the current password matches
+            if (admin.getPassword().equals(currentPassword)) {
+                // Update the password
+                admin.setPassword(newPassword);
+                adminService.saveAdmin(admin);
+                return ResponseEntity.ok("Password updated successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Current password is incorrect.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found.");
+        }
+    }
+
+
 }
