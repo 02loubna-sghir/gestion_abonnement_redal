@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert, Table } from 'react-bootstrap';
 import NavbarC from '../../layout/navbarClient';
+import { useLocation } from 'react-router-dom';
 
 const initialDemandes = [
   { id: 1, type: 'Nouvel Abonnement', description: 'Demande pour un nouvel abonnement Premium.', etat: 'Traitée' },
@@ -8,31 +9,69 @@ const initialDemandes = [
 ];
 
 const FaireDemande = () => {
+  const location = useLocation();
+  const { id_client: locationIdClient } = location.state || {};
+  const user = JSON.parse(localStorage.getItem('user'));
+  const id_client = locationIdClient || user?.id_client;
+
   const [typeDemande, setTypeDemande] = useState('');
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [demandes, setDemandes] = useState(initialDemandes);
 
-  const handleSubmit = (e) => {
+  const fetchClientDetails = async (id_client) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/clients/${id_client}`)
+
+      if (response.ok) {
+        return await response.json();
+      } else {
+        console.error('Erreur lors de la récupération des détails du client.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des détails du client :', error);
+      return null;
+    }
+  };
+  
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const clientDetails = await fetchClientDetails(id_client);
 
-    // Simulation d'envoi de demande
-    console.log('Demande soumise :', { typeDemande, description });
-
-    // Ajouter la nouvelle demande à l'historique
     const newDemande = {
-      id: demandes.length + 1,
       type: typeDemande,
       description,
-      etat: 'En attente',
+      client: clientDetails,  
+      etat: 'En attente'
     };
-    setDemandes([...demandes, newDemande]);
+console.log(newDemande);
+    try {
+      const response = await fetch('http://localhost:8080/demande', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newDemande),
+      });
 
-    setShowAlert(true);
-    setMessage('Votre demande a été soumise avec succès.');
+      if (response.ok) {
+        const savedDemande = await response.json();
+        setDemandes([...demandes, savedDemande]);
+        setMessage('Votre demande a été soumise avec succès.');
+        setShowAlert(true);
+      } else {
+        setMessage('Erreur lors de la soumission de la demande.');
+        setShowAlert(true);
+      }
+    } catch (error) {
+      console.error('Erreur :', error);
+      setMessage('Erreur lors de la soumission de la demande.');
+      setShowAlert(true);
+    }
 
-    // Réinitialiser le formulaire
     setTypeDemande('');
     setDescription('');
   };
@@ -42,7 +81,7 @@ const FaireDemande = () => {
       <NavbarC userEmail="client@exemple.com" />
       <div className="container mt-4">
         <h2>Faire une demande</h2>
-        {showAlert && <Alert variant="success">{message}</Alert>}
+        {showAlert && <Alert variant={message.includes('Erreur') ? 'danger' : 'success'}>{message}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="typeDemande" className="mb-3">
             <Form.Label>Type de demande</Form.Label>

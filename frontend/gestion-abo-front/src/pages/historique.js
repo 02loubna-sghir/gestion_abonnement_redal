@@ -6,28 +6,35 @@ import ClientNavbar from '../layout/navbarClient';
 import { Table } from 'react-bootstrap';
 
 const Historique = () => {
+  // KIFACH TJIBI L ID
   const location = useLocation();
-  const { clientId, isClient } = location.state || {};
+  const { id_client: locationIdClient, isClient } = location.state || {};
+    const user = JSON.parse(localStorage.getItem('user'));
+  const id_client = locationIdClient || user?.id_client;
+
   const [historiqueData, setHistoriqueData] = useState([]);
 
   useEffect(() => {
     const fetchHistorique = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/abonnements/client/${clientId}`);
+        const response = await axios.get(`http://localhost:8080/abonnements/client/${id_client}`);
         setHistoriqueData(response.data);
+        console.log(response);
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'historique:', error);
       }
     };
 
-    fetchHistorique();
-  }, [clientId]);
+    if (id_client) {
+      fetchHistorique();
+    }
+  }, [id_client]);
 
   const isAdmin = !isClient;
 
   return (
     <div>
-      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail="client@example.com" />}
+      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail={user?.email} />}
       <div className="container mt-5">
         <h2>Historique des Abonnements</h2>
         <div className="card shadow-lg p-3 mb-5 bg-white rounded">

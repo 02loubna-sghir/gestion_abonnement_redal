@@ -13,12 +13,11 @@ public class demande {
     private Integer id_demande;
     private String description;
     private String etat ;
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
 
-    @ManyToOne
-    @JoinColumn(name = "id_type")
-    private Typedemande typedemande;
+
 }

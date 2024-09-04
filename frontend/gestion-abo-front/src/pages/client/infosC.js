@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../../layout/navbar';
 import ClientNavbar from '../../layout/navbarClient';
@@ -7,18 +8,34 @@ const InfosClient = ({ isAdmin }) => {
   // Récupère les informations de l'utilisateur depuis le localStorage
   const user = JSON.parse(localStorage.getItem('user'));
   const clientId = user?.id_client; // Assurez-vous que l'ID est stocké sous 'id_client'
-
-  console.log('Client ID:', clientId); // Affiche l'ID du client dans la console
-
   const navigate = useNavigate();
 
-  // Simuler les informations du client en utilisant l'ID récupéré
-  const clientInfo = {
+  const [clientInfo, setClientInfo] = useState({
     id: clientId,
-    nom: user?.nom,  
-    prenom: user?.prenom,
-    email: user?.email || 'john.doe@example.com',
-    };
+    nom: '',
+    prenom: '',
+    email: ''
+  });
+
+  useEffect(() => {
+
+    if (clientId) {
+      // Effectue une requête GET pour récupérer les informations du client
+      axios.get(`http://localhost:8080/api/clients/${clientId}`)
+      .then(response => {
+          const data = response.data;
+          setClientInfo({
+            id: data.id,
+            nom: data.nom,
+            prenom: data.prenom,
+            email: data.email
+          });
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des informations du client:', error);
+        });
+    }
+  }, [clientId]);
 
   const handleViewHistory = () => {
     navigate('/historique', { state: { clientId: clientInfo.id, isClient: !isAdmin } });

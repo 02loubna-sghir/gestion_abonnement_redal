@@ -1,10 +1,14 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import NavbarC from '../../layout/navbarClient';
 import borneImage from '../../assets/borne.png'; // Importer l'image
 import guideUser from '../../assets/guideuser.png';
 
 function AccueilC() {
   const clientEmail = "client@example.com";
+  const location = useLocation();
+  const { id_client } = location.state || {};
+  console.log(id_client);
 
   return (
     <div>

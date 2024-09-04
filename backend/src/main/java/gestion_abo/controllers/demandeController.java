@@ -23,11 +23,14 @@ public class demandeController {
 
     @GetMapping("/{id}")
     public Optional<demande> getClientById(@PathVariable Integer id) {
+
         return demandeService.finddemandeById(id);
     }
 
     @PostMapping
     public demande createdemande(@RequestBody demande demande) {
+        System.out.println("Demande reçue : " + demande);
+
         return demandeService.savedemande(demande);
     }
 

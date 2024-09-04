@@ -12,10 +12,10 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [userType, setUserType] = useState('client'); // 'client' or 'admin'
-  
-  const navigate = useNavigate(); // Initialiser useNavigate
-  
+  const [userType, setUserType] = useState('client');
+
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -31,13 +31,11 @@ const Login = () => {
         });
 
         if (response.status === 200) {
-            const { id, email } = response.data; // Assuming the response contains id and email
-            
-            // Save user data in localStorage or state management
-            localStorage.setItem('user', JSON.stringify({ id, email, userType }));
+            const { id_client } = response.data.client;
+            localStorage.setItem('user', JSON.stringify({ id_client, email, userType }));
 
-            // Redirect to the appropriate page
-            navigate(userType === 'admin' ? '/admin/accueil' : '/accueilC');
+            // Pass the client ID to the AccueilC component
+            navigate(userType === 'admin' ? '/admin/accueil' : '/accueilC', { state: { id_client } });
         } else {
             setError('Login failed. Please check your credentials.');
         }
@@ -45,8 +43,7 @@ const Login = () => {
         console.error('Error during login:', err);
         setError('An error occurred. Please try again.');
     }
-};
-
+  };
 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
