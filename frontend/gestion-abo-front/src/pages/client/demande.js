@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert, Table } from 'react-bootstrap';
 import NavbarC from '../../layout/navbarClient';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-const initialDemandes = [
-  { id: 1, type: 'Nouvel Abonnement', description: 'Demande pour un nouvel abonnement Premium.', etat: 'Traitée' },
-  { id: 2, type: 'Résiliation', description: 'Demande pour résilier un abonnement.', etat: 'En attente' },
-];
+
 
 const FaireDemande = () => {
   const location = useLocation();
@@ -18,12 +16,15 @@ const FaireDemande = () => {
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
-  const [demandes, setDemandes] = useState(initialDemandes);
+  const [demandes, setDemandes] = useState([]);
+
+  useEffect(() => {
+    fetchDemandes();
+  }, []);
 
   const fetchClientDetails = async (id_client) => {
     try {
       const response = await fetch(`http://localhost:8080/api/clients/${id_client}`)
-
       if (response.ok) {
         return await response.json();
       } else {
@@ -35,7 +36,19 @@ const FaireDemande = () => {
       return null;
     }
   };
-  
+
+  const fetchDemandes = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/demande');
+      if (response.status === 200) {
+        setDemandes(response.data);
+      } else {
+        console.error('Erreur lors de la récupération des demandes.');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes :', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +60,7 @@ const FaireDemande = () => {
       client: clientDetails,  
       etat: 'En attente'
     };
-console.log(newDemande);
+
     try {
       const response = await fetch('http://localhost:8080/demande', {
         method: 'POST',
@@ -124,8 +137,8 @@ console.log(newDemande);
           </thead>
           <tbody>
             {demandes.map((demande) => (
-              <tr key={demande.id}>
-                <td>{demande.id}</td>
+              <tr key={demande.id_demande}>
+                <td>{demande.id_demande}</td>
                 <td>{demande.type}</td>
                 <td>{demande.description}</td>
                 <td>{demande.etat}</td>
