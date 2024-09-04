@@ -1,6 +1,7 @@
 package gestion_abo.controllers;
 
 import gestion_abo.entities.Admin;
+import gestion_abo.entities.Client;
 import gestion_abo.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,13 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/api/admins")
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 public class AdminController {
 
@@ -61,19 +59,19 @@ public class AdminController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Map<String, Object>> loginClient(@RequestParam String email, @RequestParam String password) {
         Optional<Admin> admin = adminService.findAdminByEmail(email);
-
         if (admin.isPresent() && admin.get().getPassword().equals(password)) {
-            // Return the admin information (without the password for security reasons)
-            Admin adminInfo = admin.get();
-            adminInfo.setPassword(null); // Remove password from response
-            return ResponseEntity.ok(adminInfo);
+            Integer idAdmin = admin.get().getId_admin();
+            Map<String, Object> response = new HashMap<>();
+            response.put("id_admin", idAdmin);
+            response.put("admin", admin.get());
+
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
     @PutMapping("/{id}/change-password")
     public ResponseEntity<?> changePassword(@PathVariable Integer id, @RequestBody Map<String, String> passwordData) {
         Optional<Admin> adminOptional = adminService.findAdminById(id);

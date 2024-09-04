@@ -56,7 +56,6 @@ public class ClientController {
     public List<Client> getAllClients() {
         return clientService.findAllClients();
     }
-    // ClientController.java
     @GetMapping("/login")
     public ResponseEntity<Map<String, Object>> loginClient(@RequestParam String email, @RequestParam String password) {
         Optional<Client> client = clientService.findClientByEmail(email);

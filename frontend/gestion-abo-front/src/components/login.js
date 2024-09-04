@@ -21,7 +21,7 @@ const Login = () => {
     setError('');
     try {
         const url = userType === 'admin'
-            ? 'http://localhost:8080/admins/login'
+            ? 'http://localhost:8080/api/admins'
             : 'http://localhost:8080/api/clients/login';
 
         const response = await axios.get(url, {
@@ -29,11 +29,14 @@ const Login = () => {
         });
 
         if (response.status === 200) {
-            const { id_client } = response.data.client;
-            localStorage.setItem('user', JSON.stringify({ id_client, email, userType }));
-
-            // Redirection en fonction du type d'utilisateur
-            navigate(userType === 'admin' ? '/admin/accueil' : '/accueilC');
+            if (userType === 'client') {
+                const { id_client } = response.data.client;
+                localStorage.setItem('user', JSON.stringify({ id_client, email, userType }));
+                navigate('/accueilC');
+            } else if (userType === 'admin') {
+                localStorage.setItem('user', JSON.stringify({ email, userType }));
+                navigate('/admin/accueil');
+            }
         } else {
             setError('Échec de la connexion. Veuillez vérifier vos informations.');
         }
@@ -41,7 +44,8 @@ const Login = () => {
         console.error('Erreur lors de la connexion:', err);
         setError('Une erreur est survenue. Veuillez réessayer.');
     }
-  };
+};
+
 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
