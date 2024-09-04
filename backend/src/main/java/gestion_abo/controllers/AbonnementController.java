@@ -51,4 +51,15 @@ public class AbonnementController {
     public List<Abonnement> getAbonnementsByClientId(@PathVariable Integer idClient) {
         return abonnementService.findAbonnementsByClientId(idClient);
     }
+
+    @GetMapping("/count")
+    public long countAbonnements() {
+        return abonnementService.countAbonnements();
+    }
+
+    @GetMapping("/sum-volume")
+    public double getTotalVolume() {
+        return abonnementService.sumVolumes();
+    }
+
 }

@@ -12,4 +12,7 @@ public interface AbonnementRepository extends JpaRepository<Abonnement, Integer>
 
     @Query("SELECT a FROM Abonnement a WHERE a.client.id_client = :idClient")
     List<Abonnement> findByClientIdClient(Integer idClient);
+
+    @Query("SELECT SUM(a.volume) FROM Abonnement a")
+    double sumVolumes();
 }

@@ -42,4 +42,12 @@ public class AbonnementService {
     public List<Abonnement> findAbonnementsByClientId(Integer idClient) {
         return abonnementRepository.findByClientIdClient(idClient);
     }
+
+    public long countAbonnements() {
+        return abonnementRepository.count();
+    }
+
+    public double sumVolumes() {
+        return abonnementRepository.sumVolumes();
+    }
 }

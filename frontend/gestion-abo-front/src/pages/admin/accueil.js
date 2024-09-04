@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Importer axios
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AdminNavbar from '../../layout/navbar';
 import SubscriptionChart from '../../components/SubscriptionChart';
@@ -7,66 +7,75 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './adminHome.css';
 
 const AdminHome = () => {
-  const [totalAbonnements, setTotalAbonnements] = useState(0); // État pour stocker le nombre total d'abonnements
+  const [totalAbonnements, setTotalAbonnements] = useState(0);
+  const [totalVolume, setTotalVolume] = useState(0); // State to store the total volume
 
-  // Utiliser useEffect pour effectuer la requête GET lors du montage du composant
   useEffect(() => {
     const fetchTotalAbonnements = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/abonnements') ; // Remplacez par votre URL API
-        console.log('Response data:', response.data); // Ajouter un log pour vérifier les données
-        setTotalAbonnements(response.data.length); // Mettre à jour le nombre total d'abonnements
+        const response = await axios.get('http://localhost:8080/abonnements/count');
+        setTotalAbonnements(response.data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des abonnements:', error);
+        console.error('Error fetching abonnement count:', error);
+      }
+    };
+
+    const fetchTotalVolume = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/abonnements/sum-volume');
+        setTotalVolume(response.data); // Update the total volume
+      } catch (error) {
+        console.error('Error fetching total volume:', error);
       }
     };
 
     fetchTotalAbonnements();
-  }, []); // Le tableau vide [] signifie que l'effet se déclenche uniquement au montage
+    fetchTotalVolume(); // Fetch the total volume when the component mounts
+  }, []);
 
-  // Exemple de données pour le graphique
+  // Example data for the chart
   const chartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     values: [30, 40, 35, 50, 60, 70, 80, 90, 100, 110, 120, 130]
   };
 
-  // Exemple de données pour les demandes non traitées
+  // Example data for pending requests
   const pendingRequests = [
-    { id: 1, title: 'Demande de mise à jour du profil', date: '01/08/2024' },
-    { id: 2, title: 'Demande de modification du plan d’abonnement', date: '02/08/2024' }
+    { id: 1, title: 'Profile update request', date: '01/08/2024' },
+    { id: 2, title: 'Subscription plan modification request', date: '02/08/2024' }
   ];
 
   return (
     <div>
       <AdminNavbar userEmail="admin@example.com" />
       <div className="container mt-4">
-        {/* Section de bienvenue */}
+        {/* Welcome section */}
         <div className="row mb-4">
           <div className="col-md-12">
             <div className="jumbotron text-center bg-primary text-white">
               <h1 className="display-4">Bienvenue, Administrateur !</h1>
-              <p className="lead">Voici un aperçu de vos statistiques et alertes les plus récentes.</p>
+              <p className="lead">Voici un aperçu de vos dernières statistiques et alertes.</p>
             </div>
           </div>
         </div>
 
-        {/* Cartes d'information */}
+        {/* Information cards */}
         <div className="row mb-4">
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
-                <h5 className="card-title">Total Abonnements</h5>
-                <p className="card-text">{totalAbonnements}</p> {/* Affichage du nombre total d'abonnements */}
-                <p className="card-text text-muted">Nombre total d'abonnements actuels.</p>
+                <h5 className="card-title">Total des abonnements</h5>
+                <p className="card-text">{totalAbonnements}</p> {/* Display total abonnements */}
+                <p className="card-text text-muted">Nombre total d'abonnements en cours.</p>
               </div>
             </div>
           </div>
-          {/* Autres cartes */}
+          {/* Other cards */}
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
-                <h5 className="card-title">Consommation Totale</h5>
-                <p className="card-text">5678 m³</p>
+                <h5 className="card-title">Consommation totale</h5>
+                <p className="card-text">{totalVolume} m³</p> {/* Display total volume */}
                 <p className="card-text text-muted">Consommation totale d'eau jusqu'à présent.</p>
               </div>
             </div>
@@ -85,12 +94,12 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Graphique des abonnements */}
+        {/* Subscription chart */}
         <div className="row">
           <div className="col-md-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Tendances des Abonnements</h4>
+                <h4 className="card-title">Tendances des abonnements</h4>
               </div>
               <div className="card-body">
                 <SubscriptionChart data={chartData} />
@@ -99,19 +108,19 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Section des demandes non traitées */}
+        {/* Pending requests section */}
         <div className="row mt-4">
           <div className="col-md-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Demandes Non Traitée</h4>
+                <h4 className="card-title">Demandes Non Traitées</h4>
               </div>
               <div className="card-body">
                 <ul className="list-group">
                   {pendingRequests.map(request => (
                     <li key={request.id} className="list-group-item">
                       <h6 className="mb-1">{request.title}</h6>
-                      <p className="mb-1">Date : {request.date}</p>
+                      <p className="mb-1">Date: {request.date}</p>
                       <Link to={`/gestion-demandes`} className="btn btn-sm btn-primary">Voir les détails</Link>
                     </li>
                   ))}
