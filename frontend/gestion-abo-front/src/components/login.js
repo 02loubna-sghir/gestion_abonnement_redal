@@ -18,30 +18,28 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
     try {
         const url = userType === 'admin'
             ? 'http://localhost:8080/admins/login'
-            : 'http://localhost:8080/clients/login';
+            : 'http://localhost:8080/api/clients/login';
 
         const response = await axios.get(url, {
-            params: {
-                email: email,
-                password: password,
-            },
+            params: { email, password },
         });
 
         if (response.status === 200) {
             const { id_client } = response.data.client;
             localStorage.setItem('user', JSON.stringify({ id_client, email, userType }));
 
-            // Pass the client ID to the AccueilC component
-            navigate(userType === 'admin' ? '/admin/accueil' : '/accueilC', { state: { id_client } });
+            // Redirection en fonction du type d'utilisateur
+            navigate(userType === 'admin' ? '/admin/accueil' : '/accueilC');
         } else {
-            setError('Login failed. Please check your credentials.');
+            setError('Échec de la connexion. Veuillez vérifier vos informations.');
         }
     } catch (err) {
-        console.error('Error during login:', err);
-        setError('An error occurred. Please try again.');
+        console.error('Erreur lors de la connexion:', err);
+        setError('Une erreur est survenue. Veuillez réessayer.');
     }
   };
 
@@ -133,7 +131,7 @@ const Login = () => {
         
         <div className="text-center mt-4 p-3">
           <a href="/signup" className="text-decoration-none" style={{ color: '#b22222' }}>
-            Vous n'êtes pas membre ? inscrivez-vous maintenant
+            Vous n'êtes pas membre ? Inscrivez-vous maintenant
           </a>
         </div>
       </div>
