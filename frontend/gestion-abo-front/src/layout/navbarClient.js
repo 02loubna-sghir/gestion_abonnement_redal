@@ -9,9 +9,7 @@ function NavbarC() {
     const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data
     const clientEmail = user?.email;
     const clientId = user?.id_client; 
-    // Affiche la valeur de clientEmail dans la console
-    console.log('Client Email:', clientEmail);
-    console.log('Client Id:', clientId);
+  
     return (
         <Navbar expand="lg" className="custom-navbar">
             <Container>
