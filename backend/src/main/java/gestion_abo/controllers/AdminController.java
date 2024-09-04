@@ -12,7 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/admins")
+@RequestMapping("/admins")
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 public class AdminController {
 

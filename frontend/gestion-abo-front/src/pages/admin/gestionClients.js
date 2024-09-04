@@ -22,7 +22,7 @@ const ClientManagement = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/clients');
+        const response = await axios.get('http://localhost:8080/api/clients');
         setClientsData(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des clients:', error);
@@ -82,7 +82,7 @@ const ClientManagement = () => {
 
   const handleAddClient = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/clients', clientForm);
+      const response = await axios.post('http://localhost:8080/api/clients', clientForm);
       console.log('Client ajouté:', response.data);
 
       // Met à jour la liste des clients
@@ -96,7 +96,7 @@ const ClientManagement = () => {
 
   const handleEditClient = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/clients/${selectedClient.id_client}`, clientForm);
+      const response = await axios.put(`http://localhost:8080/api/clients/${selectedClient.id_client}`, clientForm);
       console.log('Client mis à jour:', response.data);
 
       // Met à jour la liste des clients
@@ -114,7 +114,7 @@ const ClientManagement = () => {
 
   const handleDeleteClient = async (clientId) => {
     try {
-      await axios.delete(`http://localhost:8080/clients/${clientId}`);
+      await axios.delete(`http://localhost:8080/api/clients/${clientId}`);
       console.log('Client supprimé');
 
       // Met à jour la liste des clients

@@ -21,7 +21,7 @@ const Login = () => {
     setError('');
     try {
         const url = userType === 'admin'
-            ? 'http://localhost:8080/api/admins'
+            ? 'http://localhost:8080/admins'
             : 'http://localhost:8080/api/clients/login';
 
         const response = await axios.get(url, {
