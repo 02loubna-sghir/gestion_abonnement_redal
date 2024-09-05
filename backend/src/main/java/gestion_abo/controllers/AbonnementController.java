@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.Month;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -60,6 +62,12 @@ public class AbonnementController {
     @GetMapping("/sum-volume")
     public double getTotalVolume() {
         return abonnementService.sumVolumes();
+    }
+
+//chart
+    @GetMapping("/volume-by-month")
+    public Map<Month, Double> getVolumeByMonth() {
+        return abonnementService.getTotalVolumeByMonth();
     }
 
 }

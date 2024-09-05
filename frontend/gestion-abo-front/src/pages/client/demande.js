@@ -4,8 +4,6 @@ import NavbarC from '../../layout/navbarClient';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-
-
 const FaireDemande = () => {
   const location = useLocation();
   const { id_client: locationIdClient } = location.state || {};
@@ -24,7 +22,7 @@ const FaireDemande = () => {
 
   const fetchClientDetails = async (id_client) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/clients/${id_client}`)
+      const response = await fetch(`http://localhost:8080/api/clients/${id_client}`);
       if (response.ok) {
         return await response.json();
       } else {
@@ -41,7 +39,10 @@ const FaireDemande = () => {
     try {
       const response = await axios.get('http://localhost:8080/demande');
       if (response.status === 200) {
-        setDemandes(response.data);
+        const allDemandes = response.data;
+        // Filtrer les demandes pour n'afficher que celles du client connecté
+        const clientDemandes = allDemandes.filter(demande => demande.client?.id_client === id_client);
+        setDemandes(clientDemandes);
       } else {
         console.error('Erreur lors de la récupération des demandes.');
       }
@@ -57,7 +58,7 @@ const FaireDemande = () => {
     const newDemande = {
       type: typeDemande,
       description,
-      client: clientDetails,  
+      client: clientDetails,
       etat: 'En attente'
     };
 

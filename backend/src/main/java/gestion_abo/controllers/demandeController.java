@@ -53,4 +53,10 @@ public class demandeController {
     public List<demande> getAlldemande() {
         return demandeService.findAlldemande();
     }
+
+    // New endpoint to get the total number of demandes
+    @GetMapping("/count")
+    public long countDemandes() {
+        return demandeService.countDemandes();
+    }
 }

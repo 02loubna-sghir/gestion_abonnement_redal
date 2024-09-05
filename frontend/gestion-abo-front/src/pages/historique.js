@@ -6,10 +6,9 @@ import ClientNavbar from '../layout/navbarClient';
 import { Table } from 'react-bootstrap';
 
 const Historique = () => {
-  // KIFACH TJIBI L ID
   const location = useLocation();
   const { id_client: locationIdClient, isClient } = location.state || {};
-    const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user'));
   const id_client = locationIdClient || user?.id_client;
 
   const [historiqueData, setHistoriqueData] = useState([]);
@@ -30,11 +29,13 @@ const Historique = () => {
     }
   }, [id_client]);
 
-  const isAdmin = !isClient;
-
   return (
     <div>
-      {isAdmin ? <AdminNavbar userEmail="admin@example.com" /> : <ClientNavbar userEmail={user?.email} />}
+      {isClient ? (
+        <ClientNavbar userEmail={user?.email} />
+      ) : (
+        <AdminNavbar userEmail="admin@example.com" />
+      )}
       <div className="container mt-5">
         <h2>Historique des Abonnements</h2>
         <div className="card shadow-lg p-3 mb-5 bg-white rounded">

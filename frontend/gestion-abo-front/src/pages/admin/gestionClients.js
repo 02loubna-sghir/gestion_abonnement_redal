@@ -124,9 +124,14 @@ const ClientManagement = () => {
     }
   };
 
-  const navigateToHistorique = (clientId) => {
+  /*const navigateToHistorique = (clientId) => {
     navigate('/historique', { state: { clientId, isClient: false } });
+  };*/
+
+  const navigateToHistorique = (clientId) => {
+    navigate('/historique', { state: { id_client: clientId, isClient: false } });
   };
+  
 
   return (
     <div>

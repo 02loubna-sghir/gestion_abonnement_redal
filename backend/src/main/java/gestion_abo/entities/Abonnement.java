@@ -1,6 +1,8 @@
 package gestion_abo.entities;
 
 import java.time.LocalDate;
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +24,7 @@ public class Abonnement {
     @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
+
+
+
 }

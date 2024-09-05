@@ -5,8 +5,12 @@ import gestion_abo.repositories.AbonnementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AbonnementService {
@@ -50,4 +54,14 @@ public class AbonnementService {
     public double sumVolumes() {
         return abonnementRepository.sumVolumes();
     }
+//chart
+    public Map<Month, Double> getTotalVolumeByMonth() {
+        List<Abonnement> abonnements = abonnementRepository.findAll();
+        return abonnements.stream()
+                .collect(Collectors.groupingBy(
+                        abonnement -> abonnement.getDate_debut().getMonth(),
+                        Collectors.summingDouble(Abonnement::getVolume)
+                ));
+    }
+
 }

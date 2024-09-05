@@ -38,5 +38,10 @@ public class demandeService {
     public List<demande> findAlldemande() {
         return demandeRepository.findAll();
     }
+
+    // New method to count the total number of demandes
+    public long countDemandes() {
+        return demandeRepository.count();
+    }
 }
 

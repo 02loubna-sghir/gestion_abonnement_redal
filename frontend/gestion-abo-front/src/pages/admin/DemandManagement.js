@@ -1,38 +1,56 @@
-import React, { useState } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Table, Button, Form } from 'react-bootstrap';
 import AdminNavbar from '../../layout/navbar';
 
-const initialDemandes = [
-  { id: 1, client: 'Loubna Sghir', type: 'Nouvel Abonnement', description: 'Demande pour un nouvel abonnement Premium.', etat: 'En attente', reponseAdmin: '' },
-  { id: 2, client: 'Ikram Ghazal', type: 'Résiliation', description: 'Demande pour résilier un abonnement.', etat: 'En attente', reponseAdmin: '' },
-];
-
 const DemandManagement = () => {
-  const [demandes, setDemandes] = useState(initialDemandes);
-  const [selectedDemande, setSelectedDemande] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [reponseAdmin, setReponseAdmin] = useState('');
+  const [demandes, setDemandes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleCloseModal = () => setShowModal(false);
-  const handleShowModal = (demande) => {
-    setSelectedDemande(demande);
-    setReponseAdmin(demande.reponseAdmin || '');
-    setShowModal(true);
+  // Fonction pour récupérer les demandes depuis l'API
+  const fetchDemandes = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/demande');
+      setDemandes(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes:', error);
+    }
   };
 
-  const handleSubmitResponse = () => {
-    const updatedDemandes = demandes.map((d) =>
-      d.id === selectedDemande.id ? { ...d, etat: 'Traitée', reponseAdmin } : d
-    );
-    setDemandes(updatedDemandes);
-    setShowModal(false);
+  // Utilisez useEffect pour récupérer les demandes lorsque le composant est monté
+  useEffect(() => {
+    fetchDemandes();
+  }, []);
+
+  // Fonction pour mettre à jour l'état d'une demande dans la base de données
+  const updateDemandeEtat = async (id_demande, newEtat) => {
+    try {
+      const demandeToUpdate = demandes.find((demande) => demande.id_demande === id_demande);
+      console.log('Demande à mettre à jour:', demandeToUpdate);
+      setLoading(true);
+
+      await axios.put(`http://localhost:8080/demande/${id_demande}`, {
+        ...demandeToUpdate,
+        etat: newEtat,
+      });
+
+      // Mettre à jour l'état local après la mise à jour réussie
+      setDemandes((prevDemandes) =>
+        prevDemandes.map((demande) =>
+          demande.id_demande === id_demande ? { ...demande, etat: newEtat } : demande
+        )
+      );
+
+      console.log('Demande mise à jour avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la demande:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEtatChange = (id, newEtat) => {
-    const updatedDemandes = demandes.map((demande) =>
-      demande.id === id ? { ...demande, etat: newEtat } : demande
-    );
-    setDemandes(updatedDemandes);
+  const handleEtatChange = (id_demande, newEtat) => {
+    updateDemandeEtat(id_demande, newEtat);
   };
 
   return (
@@ -40,10 +58,10 @@ const DemandManagement = () => {
       <AdminNavbar userEmail="admin@redal.com" />
       <div className="container mt-4">
         <h2>Gestion des Demandes</h2>
+        {loading && <p>Chargement...</p>}
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Client</th>
               <th>Type de demande</th>
               <th>Description</th>
@@ -53,27 +71,26 @@ const DemandManagement = () => {
           </thead>
           <tbody>
             {demandes.map((demande) => (
-              <tr key={demande.id}>
-                <td>{demande.id}</td>
-                <td>{demande.client}</td>
+              <tr key={demande.id_demande}>
+                <td>{demande.client ? `${demande.client.nom} ${demande.client.prenom}` : 'Inconnu'}</td>
                 <td>{demande.type}</td>
                 <td>{demande.description}</td>
                 <td>
                   <Form.Select
                     value={demande.etat}
-                    onChange={(e) => handleEtatChange(demande.id, e.target.value)}
+                    onChange={(e) => handleEtatChange(demande.id_demande, e.target.value)}
                     disabled={demande.etat === 'Traitée'}
                   >
                     <option value="En attente">En attente</option>
-                    <option value="traitée">traitée</option>
-                    <option value="rejetée">rejetée</option>
+                    <option value="Traitée">Traitée</option>
+                    <option value="Rejetée">Rejetée</option>
                   </Form.Select>
                 </td>
                 <td>
                   <Button
                     variant="primary"
-                    onClick={() => handleShowModal(demande)}
                     disabled={demande.etat === 'Traitée'}
+                    onClick={() => handleEtatChange(demande.id_demande, 'Traitée')}
                   >
                     Répondre
                   </Button>
@@ -82,32 +99,6 @@ const DemandManagement = () => {
             ))}
           </tbody>
         </Table>
-
-        {/* Modal pour répondre à la demande */}
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Répondre à la demande</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group controlId="reponseAdmin">
-              <Form.Label>Réponse de l'admin</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={reponseAdmin}
-                onChange={(e) => setReponseAdmin(e.target.value)}
-              />
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Fermer
-            </Button>
-            <Button variant="primary" onClick={handleSubmitResponse}>
-              Envoyer Réponse
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </div>
     </div>
   );

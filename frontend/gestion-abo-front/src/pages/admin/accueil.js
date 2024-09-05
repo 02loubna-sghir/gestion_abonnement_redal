@@ -9,6 +9,7 @@ import './adminHome.css';
 const AdminHome = () => {
   const [totalAbonnements, setTotalAbonnements] = useState(0);
   const [totalVolume, setTotalVolume] = useState(0); // State to store the total volume
+  const [totalDemandes, setTotalDemandes] = useState(0); // State to store the total number of demandes
 
   useEffect(() => {
     const fetchTotalAbonnements = async () => {
@@ -29,8 +30,18 @@ const AdminHome = () => {
       }
     };
 
+    const fetchTotalDemandes = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/demande/count');
+        setTotalDemandes(response.data); // Update the total demandes
+      } catch (error) {
+        console.error('Error fetching total demandes:', error);
+      }
+    };
+
     fetchTotalAbonnements();
     fetchTotalVolume(); // Fetch the total volume when the component mounts
+    fetchTotalDemandes(); // Fetch the total demandes when the component mounts
   }, []);
 
   // Example data for the chart
@@ -38,12 +49,6 @@ const AdminHome = () => {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     values: [30, 40, 35, 50, 60, 70, 80, 90, 100, 110, 120, 130]
   };
-
-  // Example data for pending requests
-  const pendingRequests = [
-    { id: 1, title: 'Profile update request', date: '01/08/2024' },
-    { id: 2, title: 'Subscription plan modification request', date: '02/08/2024' }
-  ];
 
   return (
     <div>
@@ -84,8 +89,8 @@ const AdminHome = () => {
             <div className="card card-info">
               <div className="card-body">
                 <h5 className="card-title">Demandes Reçues</h5>
-                <p className="card-text">2</p>
-                <p className="card-text text-muted">Nombre de demandes Reçues.</p>
+                <p className="card-text">{totalDemandes}</p> {/* Display total demandes */}
+                <p className="card-text text-muted">Nombre de demandes reçues.</p>
               </div>
               <div className="card-footer text-end">
                 <Link to="/gestion-demandes" className="btn btn-light">Voir plus</Link>
@@ -103,28 +108,6 @@ const AdminHome = () => {
               </div>
               <div className="card-body">
                 <SubscriptionChart data={chartData} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Pending requests section */}
-        <div className="row mt-4">
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Demandes Non Traitées</h4>
-              </div>
-              <div className="card-body">
-                <ul className="list-group">
-                  {pendingRequests.map(request => (
-                    <li key={request.id} className="list-group-item">
-                      <h6 className="mb-1">{request.title}</h6>
-                      <p className="mb-1">Date: {request.date}</p>
-                      <Link to={`/gestion-demandes`} className="btn btn-sm btn-primary">Voir les détails</Link>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           </div>
