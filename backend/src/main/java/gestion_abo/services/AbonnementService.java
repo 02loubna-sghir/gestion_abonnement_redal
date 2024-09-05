@@ -55,13 +55,14 @@ public class AbonnementService {
         return abonnementRepository.sumVolumes();
     }
 //chart
-    public Map<Month, Double> getTotalVolumeByMonth() {
-        List<Abonnement> abonnements = abonnementRepository.findAll();
-        return abonnements.stream()
-                .collect(Collectors.groupingBy(
-                        abonnement -> abonnement.getDate_debut().getMonth(),
-                        Collectors.summingDouble(Abonnement::getVolume)
-                ));
-    }
+
+public Map<Month, Double> getTotalVolumeByMonth() {
+    return abonnementRepository.findAll().stream()
+            .collect(Collectors.groupingBy(
+                    abonnement -> abonnement.getDate_debut().getMonth(),
+                    Collectors.summingDouble(Abonnement::getVolume)
+            ));
+}
+
 
 }

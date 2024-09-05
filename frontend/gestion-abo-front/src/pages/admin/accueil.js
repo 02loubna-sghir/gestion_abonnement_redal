@@ -8,8 +8,9 @@ import './adminHome.css';
 
 const AdminHome = () => {
   const [totalAbonnements, setTotalAbonnements] = useState(0);
-  const [totalVolume, setTotalVolume] = useState(0); // State to store the total volume
-  const [totalDemandes, setTotalDemandes] = useState(0); // State to store the total number of demandes
+  const [totalVolume, setTotalVolume] = useState(0);
+  const [totalDemandes, setTotalDemandes] = useState(0);
+  const [monthlyVolumeData, setMonthlyVolumeData] = useState([]);
 
   useEffect(() => {
     const fetchTotalAbonnements = async () => {
@@ -24,7 +25,7 @@ const AdminHome = () => {
     const fetchTotalVolume = async () => {
       try {
         const response = await axios.get('http://localhost:8080/abonnements/sum-volume');
-        setTotalVolume(response.data); // Update the total volume
+        setTotalVolume(response.data);
       } catch (error) {
         console.error('Error fetching total volume:', error);
       }
@@ -33,28 +34,54 @@ const AdminHome = () => {
     const fetchTotalDemandes = async () => {
       try {
         const response = await axios.get('http://localhost:8080/demande/count');
-        setTotalDemandes(response.data); // Update the total demandes
+        setTotalDemandes(response.data);
       } catch (error) {
         console.error('Error fetching total demandes:', error);
       }
     };
 
+    const fetchMonthlyVolume = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/abonnements/volume-by-month');
+        console.log('Response from backend:', response.data); 
+        
+        const monthsOrder = [
+          'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 
+          'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+        ];
+    
+        const formattedData = Object.keys(response.data)
+          .map(month => ({
+            month,
+            volume: response.data[month],
+            monthIndex: monthsOrder.indexOf(month) // Utiliser l'index du mois
+          }))
+          .sort((a, b) => a.monthIndex - b.monthIndex); // Trier les mois par leur index
+    
+        setMonthlyVolumeData(formattedData);
+      } catch (error) {
+        console.error('Error fetching monthly volume data:', error);
+      }
+    };
+    
+    
+    
+
     fetchTotalAbonnements();
-    fetchTotalVolume(); // Fetch the total volume when the component mounts
-    fetchTotalDemandes(); // Fetch the total demandes when the component mounts
+    fetchTotalVolume();
+    fetchTotalDemandes();
+    fetchMonthlyVolume();
   }, []);
 
-  // Example data for the chart
   const chartData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    values: [30, 40, 35, 50, 60, 70, 80, 90, 100, 110, 120, 130]
+    labels: monthlyVolumeData.map(data => data.month),
+    values: monthlyVolumeData.map(data => data.volume)
   };
 
   return (
     <div>
       <AdminNavbar userEmail="admin@example.com" />
       <div className="container mt-4">
-        {/* Welcome section */}
         <div className="row mb-4">
           <div className="col-md-12">
             <div className="jumbotron text-center bg-primary text-white">
@@ -64,32 +91,32 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Information cards */}
         <div className="row mb-4">
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
                 <h5 className="card-title">Total des abonnements</h5>
-                <p className="card-text">{totalAbonnements}</p> {/* Display total abonnements */}
+                <p className="card-text">{totalAbonnements}</p>
                 <p className="card-text text-muted">Nombre total d'abonnements en cours.</p>
               </div>
             </div>
           </div>
-          {/* Other cards */}
+
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
                 <h5 className="card-title">Consommation totale</h5>
-                <p className="card-text">{totalVolume} m³</p> {/* Display total volume */}
+                <p className="card-text">{totalVolume} m³</p>
                 <p className="card-text text-muted">Consommation totale d'eau jusqu'à présent.</p>
               </div>
             </div>
           </div>
+
           <div className="col-md-4">
             <div className="card card-info">
               <div className="card-body">
                 <h5 className="card-title">Demandes Reçues</h5>
-                <p className="card-text">{totalDemandes}</p> {/* Display total demandes */}
+                <p className="card-text">{totalDemandes}</p>
                 <p className="card-text text-muted">Nombre de demandes reçues.</p>
               </div>
               <div className="card-footer text-end">
@@ -99,7 +126,6 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Subscription chart */}
         <div className="row">
           <div className="col-md-12">
             <div className="card">

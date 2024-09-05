@@ -35,14 +35,19 @@ public class demandeController {
     }
 
     @PutMapping("/{id}")
-    public demande updatedemande(@PathVariable Integer id, @RequestBody demande demande) {
-        if (demandeService.finddemandeById(id).isPresent()) {
-            demande.setId_demande(id);
-            return demandeService.savedemande(demande);
-        } else {
-            throw new ResourceAccessException("demande not found with id " + id);
-        }
+    public demande updatedemande(@PathVariable Integer id, @RequestBody demande demandeDetails) {
+        // Récupérer la demande existante depuis la base de données
+        demande existingDemande = demandeService.finddemandeById(id).orElseThrow(
+                () -> new ResourceAccessException("Demande not found with id " + id));
+
+        // Mettre à jour uniquement les champs nécessaires
+        existingDemande.setEtat(demandeDetails.getEtat()); // Met à jour l'état
+        // Ajouter d'autres champs si besoin
+
+        // Sauvegarder la demande mise à jour
+        return demandeService.savedemande(existingDemande);
     }
+
 
     @DeleteMapping("/{id}")
     public void deletedemande(@PathVariable Integer id) {

@@ -1,0 +1,11 @@
+.button-rejetee {
+    background-color: red;
+    border-color: red;
+    color: white;
+  }
+  
+  .button-rejetee:hover {
+    background-color: darkred;
+    border-color: darkred;
+  }
+  

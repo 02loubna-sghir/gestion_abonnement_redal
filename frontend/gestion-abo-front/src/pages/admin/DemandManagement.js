@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Form } from 'react-bootstrap';
 import AdminNavbar from '../../layout/navbar';
+import './DemandManagement.css'; // Assurez-vous d'importer le fichier CSS
 
 const DemandManagement = () => {
   const [demandes, setDemandes] = useState([]);
@@ -25,12 +26,8 @@ const DemandManagement = () => {
   // Fonction pour mettre à jour l'état d'une demande dans la base de données
   const updateDemandeEtat = async (id_demande, newEtat) => {
     try {
-      const demandeToUpdate = demandes.find((demande) => demande.id_demande === id_demande);
-      console.log('Demande à mettre à jour:', demandeToUpdate);
       setLoading(true);
-
       await axios.put(`http://localhost:8080/demande/${id_demande}`, {
-        ...demandeToUpdate,
         etat: newEtat,
       });
 
@@ -51,6 +48,11 @@ const DemandManagement = () => {
 
   const handleEtatChange = (id_demande, newEtat) => {
     updateDemandeEtat(id_demande, newEtat);
+  };
+
+  const handleSelectChange = (id_demande, newEtat) => {
+    // Utilisez handleEtatChange pour mettre à jour l'état sélectionné
+    handleEtatChange(id_demande, newEtat);
   };
 
   return (
@@ -78,8 +80,8 @@ const DemandManagement = () => {
                 <td>
                   <Form.Select
                     value={demande.etat}
-                    onChange={(e) => handleEtatChange(demande.id_demande, e.target.value)}
-                    disabled={demande.etat === 'Traitée'}
+                    onChange={(e) => handleSelectChange(demande.id_demande, e.target.value)}
+                    disabled={demande.etat === 'Traitée' || demande.etat === 'Rejetée'}
                   >
                     <option value="En attente">En attente</option>
                     <option value="Traitée">Traitée</option>
@@ -88,9 +90,10 @@ const DemandManagement = () => {
                 </td>
                 <td>
                   <Button
-                    variant="primary"
-                    disabled={demande.etat === 'Traitée'}
-                    onClick={() => handleEtatChange(demande.id_demande, 'Traitée')}
+                    className={demande.etat === 'Rejetée' ? 'button-rejetee' : 'button-primary'}
+                    variant={demande.etat === 'Rejetée' ? 'danger' : 'primary'}
+                    disabled={demande.etat === 'Traitée' || demande.etat === 'Rejetée'}
+                    onClick={() => handleSelectChange(demande.id_demande, demande.etat)}
                   >
                     Répondre
                   </Button>
