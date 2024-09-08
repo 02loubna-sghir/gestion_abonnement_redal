@@ -33,7 +33,8 @@ const Registration = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/clients', {
+      const response = await axios.post('http://localhost:8080/api/clients', {
+
         nom: formData.lastName,
         prenom: formData.firstName,
         email: formData.email,
