@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../../layout/navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './profile.css';
-import profileImage from '../../assets/IMG_7370.jpg';
+import profileImage from '../../assets/IMG_7351.jpg';
 
 const Profile = () => {
   const [adminData, setAdminData] = useState({ nom: '', prenom: '', email: '' });
